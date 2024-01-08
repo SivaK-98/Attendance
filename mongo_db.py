@@ -42,3 +42,28 @@ def signup(email, roll_number, mobile, password, role):
   except DuplicateKeyError:
     print("Duplicate ID not allowed")
     return "duplicate"
+
+
+def login(email, password):
+  try:
+    result = auth_db.find_one({"email": email}, {"_id": 0})
+    #print("Result from mongo DB", result)
+    if result != None:
+      key = result['key']
+      got_password = result["password"]
+      data_pass = (got_password, key)
+      decrypted = crypt.decrypt(data_pass)
+
+      flag = False
+      if decrypted == password:
+        print("Password matched!!")
+        flag = True
+        flag = str(flag)
+        account_id = result["roll_number"]
+        user_db = db[str(account_id)]
+        return account_id
+      else:
+        return "Invalid email / password"
+  except Exception as e:
+    print(e)
+    return e

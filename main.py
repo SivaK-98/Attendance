@@ -6,13 +6,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-  return render_template("home.html")
+  return render_template("login.html")
 
 
 @app.route("/signup", methods=['POST', 'GET'])
 def signup():
   if request.method == "POST":
-    print("Executing login command")
+    print("Executing Signup command")
     email = request.form.get("email")
     roll_number = request.form.get("roll_number")
     mobile = request.form.get("number")
@@ -22,8 +22,25 @@ def signup():
         f"Email: {email} \nRoll Number: {roll_number} \nMobile: {mobile}\nPassword: {password}\nrole: {role}"
     )
     result = mongo_db.signup(email, roll_number, mobile, password, role)
-    print(result)
-    return render_template("home.html")
+    if result == True:
+      return render_template("login.html")
+    elif result == "duplicate":
+      return "ID already used"
+
+@app.route('/signup_page',methods=['POST', 'GET'])
+def signup_page():
+  return render_template("signup.html")
+
+@app.route("/login", methods=['POST', 'GET'])
+def login():
+  if request.method == "POST":
+    email = request.form.get("email")
+    password = request.form.get("password")
+    result = mongo_db.login(email, password)
+    if result:
+      return render_template("dashboard.html")
+    else:
+      return "Invalid Credentials"
 
 
 if __name__ == '__main__':
