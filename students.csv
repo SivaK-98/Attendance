@@ -1,5 +1,7 @@
-Name,Enroll_number,Department,Year
-Sivasubramaniyan,15TE0291,EEE,1
-Vetrivel,16TE0291,ECE,3
-Narasus,14TE0291,MECH,4
-Katta,12TE0291,CSE,2
+Name,Email,Enroll_number,Department,Year,Role
+Sivasubramaniyan,sivasubramaniyan_15TE0291@smvec.com,15TE0291,EEE,1,Student
+Vetrivel,vetrivel_16TE0291@smvec.com,16TE0291,ECE,3,Student
+Narasus,narasus_14TE0291@smvec.com,14TE0291,MECH,4,Student
+Katta,katta_12TE0291@smvec.com,12TE0291,CSE,2,Student
+Adriean Periyanayagam,adriean periyanayagam_11111@smvec.com,11111,EEE,0,Staff
+Venkat,venkat_123@smvec.com,123,ALL,0,Admin
