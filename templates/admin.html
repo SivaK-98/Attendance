@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Attendance</title>
+</head>
+<body>
+	<div class="container">
+		<div id="formContent">
+			<form action="{{ url_for('add_staff') }}" method="post"><br>
+				<p><input type="email" id="email" class="fadeIn second" name="email" placeholder="email"></p>
+				<p><input type="text" id="name" class="fadeIn second" name="name" placeholder="name"></p>
+				<p><input type="text" id="roll_number" class="bi bi-eye-slash" name="roll_number" placeholder="Enroll Number"> </p>
+				<p><input type="number" id="number" class="bi bi-eye-slash" name="number" placeholder="MOBILE"> </p>
+				<input type="radio" id="student" name="role" value="student">
+				<label for="student">STUDENT</label>
+				<input type="radio" id="staff" name="role" value="staff">
+				<label for="staff">STAFF</label>
+				<input type="radio" id="admin" name="role" value="admin">
+				<label for="admin">ADMIN</label>
+				<p><input type="submit" class="fadeIn fourth" name="content_button" value="ADD STAFFF"></p>
+			</form>
+		</div>
+
+	</div>
+
+</body>
+</html>

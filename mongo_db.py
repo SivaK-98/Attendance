@@ -23,6 +23,7 @@ def signup(email, roll_number, mobile, password, role):
         "mobile": mobile,
         "password": encrypte_pass,
         "key": key,
+        "role": role,
         "roll_number": roll_number,
         "created_time": created_time
     }
@@ -51,9 +52,9 @@ def login(email, password):
     if result != None:
       key = result['key']
       got_password = result["password"]
+      role = result["role"]
       data_pass = (got_password, key)
       decrypted = crypt.decrypt(data_pass)
-
       flag = False
       if decrypted == password:
         print("Password matched!!")
@@ -61,9 +62,47 @@ def login(email, password):
         flag = str(flag)
         account_id = result["roll_number"]
         user_db = db[str(account_id)]
-        return account_id
+        data = {"account_id": account_id, "role": role}
+        print(data)
+        return data
       else:
         return "Invalid email / password"
   except Exception as e:
     print(e)
     return e
+
+def add_staff(name, email,roll_number,mobile,role):
+  collection = db["staff_collections"]
+  db.staff_collections.create_index([('email', pymongo.ASCENDING)], unique=True)
+  try:
+    query = {
+        "name": name,
+        "email": email,
+        "roll_number": roll_number,
+        "mobile": mobile,
+        "role": role
+    }
+    collection.insert_one(query)
+    return True
+  except Exception as e:
+    print(e)
+    return e
+
+def add_student(name, email,roll_number,mobile,role):
+  collection = db["student_collections"]
+  db.staff_collections.create_index([('email', pymongo.ASCENDING)], unique=True)
+  try:
+    query = {
+          "name": name,
+          "email": email,
+          "roll_number": roll_number,
+          "mobile": mobile,
+          "role": role
+      }
+    collection.insert_one(query)
+    return True
+  except Exception as e:
+    print(e)
+    return e
+  
+   
