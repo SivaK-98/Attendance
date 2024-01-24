@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Attendance</title>
+</head>
+<body>
+	<div class="container">
+		<div id="formContent">
+			<form action="{{ url_for('login') }}" method="post"><br>
+				<p><input type="email" id="email" class="fadeIn second" name="email" placeholder="email"></p>
+				<p><input type="password" id="password" class="bi bi-eye-slash" name="password" placeholder="password"> </p>
+				<p><input type="submit" class="fadeIn fourth" name="login" value="login"></p>
+			</form>
+			
+		</div>
+		<div>
+			<a href="{{ url_for('signup') }}""> Signup</a>
+		</div>
+		<div id="formFooter">
+			<a class="underlineHover" href="{{ url_for('login') }}">Forgot Password?</a>
+		</div>
+	</div>
+</body>
+</html>

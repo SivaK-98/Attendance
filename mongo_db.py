@@ -7,39 +7,52 @@ import os
 url = os.getenv("mongodb")
 client = pymongo.MongoClient(url)
 db = client["attendance"]
-auth_db = db["users"]
-db.users.create_index([('email', pymongo.ASCENDING)], unique=True)
+pivot_data = db["pivot_collection"]
+auth = db["auth"]
+db.auth.create_index([('email', pymongo.ASCENDING)], unique=True)
 
 
-def signup(email, roll_number, mobile, password, role):
+def signup(data):
   try:
-    user_db = db[roll_number]
-    created_time = datetime.datetime.now()
-    encrypt_data = crypt.encryptor(password)
-    encrypte_pass = encrypt_data[0]
-    key = encrypt_data[1]
-    query = {
-        "email": email,
-        "mobile": mobile,
-        "password": encrypte_pass,
-        "key": key,
-        "role": role,
-        "roll_number": roll_number,
-        "created_time": created_time
-    }
-    auth_db.insert_one(query)
-    query2 = {
-        "hour_1": "",
-        "hour_2": "",
-        "hour_3": "",
-        "hour_4": "",
-        "hour_5": "",
-        "hour_6": "",
-        "hour_7": "",
-        "hour_8": "",
-    }
-    user_db.insert_one(query2)
-    return True
+    print("Data:", data)
+    email = data["email"]
+    print(email)
+    roll = data["roll"]
+    name = data["name"]
+    find_query = {"email": email, "roll": roll, "name": name}
+    db_entry = pivot_data.find_one(find_query)
+    print("DB Entry:", db_entry)
+    if db_entry:
+      print("DB Entry:", db_entry)
+      db_entry_name = db_entry["name"]
+      db_entry_email = db_entry["email"]
+      db_entry_roll = db_entry["roll"]
+      if db_entry_email == email and db_entry_roll == roll and db_entry_name == name:
+        flag = True
+        user_db = db[str(roll)]
+        encrypt_data = crypt.encryptor(data["password"])
+        encrypte_pass = encrypt_data[0]
+        key = encrypt_data[1]
+        data["role"] = db_entry["role"]
+        data["password"] = encrypte_pass
+        data["key"] = key
+        auth.insert_one(data)
+        query2 = {
+            "hour_1": "P",
+            "hour_2": "P",
+            "hour_3": "P",
+            "hour_4": "P",
+            "hour_5": "P",
+            "hour_6": "P",
+            "hour_7": "P",
+            "hour_8": "P"
+        }
+        user_db.insert_one(query2)
+      else:
+        flag = False
+        return "Not a member"
+    else:
+      return "No entry"
   except DuplicateKeyError:
     print("Duplicate ID not allowed")
     return "duplicate"
@@ -71,9 +84,11 @@ def login(email, password):
     print(e)
     return e
 
-def add_staff(name, email,roll_number,mobile,role):
+
+def add_staff(name, email, roll_number, mobile, role):
   collection = db["staff_collections"]
-  db.staff_collections.create_index([('email', pymongo.ASCENDING)], unique=True)
+  db.staff_collections.create_index([('email', pymongo.ASCENDING)],
+                                    unique=True)
   try:
     query = {
         "name": name,
@@ -88,21 +103,21 @@ def add_staff(name, email,roll_number,mobile,role):
     print(e)
     return e
 
-def add_student(name, email,roll_number,mobile,role):
+
+def add_student(name, email, roll_number, mobile, role):
   collection = db["student_collections"]
-  db.staff_collections.create_index([('email', pymongo.ASCENDING)], unique=True)
+  db.staff_collections.create_index([('email', pymongo.ASCENDING)],
+                                    unique=True)
   try:
     query = {
-          "name": name,
-          "email": email,
-          "roll_number": roll_number,
-          "mobile": mobile,
-          "role": role
-      }
+        "name": name,
+        "email": email,
+        "roll_number": roll_number,
+        "mobile": mobile,
+        "role": role
+    }
     collection.insert_one(query)
     return True
   except Exception as e:
     print(e)
     return e
-  
-   

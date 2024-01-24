@@ -1,16 +1,18 @@
 import pymongo
 import csv
 
-with open('data.csv', 'r') as csvfile:
-  header = [ "show_id", "director"]
+
+url = "mongodb+srv://awstestuser1998:awstestuser1998@cluster0.nb2lq1w.mongodb.net/"
+client = pymongo.MongoClient(url)
+db = client["pivot_data"]
+db.segment.drop()
+with open('students.csv', 'r') as csvfile:
+  header = ["Name", "Email", "Enroll_number", "Department", "Year", "Role"]
   reader = csv.reader(csvfile)
 
   for row in reader:
-      doc={}
-      for n in range(0,len(header)):
-          doc[header[n]] = row[n]
+    doc = {}
+    for n in range(0, len(header)):
+      doc[header[n]] = row[n]
 
-      db.foo.insert(doc)
-Share
-Improve this answer
-Follow
+    db.segment.insert_many(doc)
