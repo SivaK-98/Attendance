@@ -48,19 +48,20 @@ def signup(data):
             "hour_8": "P"
         }
         user_db.insert_one(query2)
+        return True
       else:
         flag = False
-        return "Not a member"
+        return "error"
     else:
       return "No entry"
   except DuplicateKeyError:
     print("Duplicate ID not allowed")
-    return "duplicate"
+    return "error"
 
 
 def login(email, password):
   try:
-    result = auth_db.find_one({"email": email}, {"_id": 0})
+    result = auth.find_one({"email": email}, {"_id": 0})
     #print("Result from mongo DB", result)
     if result != None:
       key = result['key']
@@ -73,16 +74,18 @@ def login(email, password):
         print("Password matched!!")
         flag = True
         flag = str(flag)
-        account_id = result["roll_number"]
-        user_db = db[str(account_id)]
-        data = {"account_id": account_id, "role": role}
+        roll = result["roll"]
+        user_db = db[str(roll)]
+        data = {"roll": roll, "role": role,"error":None}
         print(data)
         return data
       else:
-        return "Invalid email / password"
+        data = {"roll": None, "role": None,"error":"Password Not matched"}
+        return data
   except Exception as e:
+    data = {"roll": None, "role": None,"error":e}
     print(e)
-    return e
+    return data
 
 
 def add_staff(name, email, roll_number, mobile, role):
