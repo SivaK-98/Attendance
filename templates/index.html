@@ -35,6 +35,30 @@
          border: 1px solid #f1f1f1;
          margin-bottom: 25px;
       }
+
+      .section-dropdown-sub {
+        position: relative;
+        display: block;
+        width: 100%;
+        pointer-events: none;
+        opacity: 0;
+        max-height: 0;
+        padding-left: 10px;
+        padding-right: 3px;
+        overflow: hidden;
+        transition: all 200ms linear;
+      }
+      .dropdown-sub:checked ~ .section-dropdown-sub{
+        pointer-events: auto;
+        opacity: 1;
+        max-height: 999px;
+      }
+      .section-dropdown-sub a {
+        font-size: 14px;
+      }
+      .section-dropdown-sub a .uil {
+        font-size: 20px;
+      }
       button {
          font-size: 18px;
          font-weight: bold;
@@ -62,7 +86,8 @@
       <div class="formContainer">
          <h1>Sign Up Form</h1>
          <hr>
-         
+         <label for="name"><b>name</b></label>
+         <input type="text" placeholder="Enter Name" name="name" required><br>
          <label for="email"><b>Email</b></label>
          <input type="email" placeholder="Enter Email" name="email" required><br>
          <label for="phone"><b>Phone</b></label>

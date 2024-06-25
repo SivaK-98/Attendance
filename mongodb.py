@@ -1,24 +1,36 @@
 import crypt
 import datetime
-import pymongo
-from pymongo.errors import DuplicateKeyError
 import os
 
-url = os.getenv("mongodb")
-url = "mongodb+srv://awstestuser1998:awstestuser1998@cluster0.nb2lq1w.mongodb.net/"
+import pymongo
+from pymongo.errors import DuplicateKeyError
 
-client = pymongo.MongoClient(url)
-db = client["auth"]
-auth_db = db["users"]
-db.users.create_index([('email', pymongo.ASCENDING)], unique=True)
+url = os.getenv("MONGODB")
 
-# Send a ping to confirm a successful connection
-try:
-    client.admin.command('ping')
-    print("successfully connected to MongoDB!")
-    response = crypt.encryptor("test")
-    print(response)
-    return response
+mongo_client = pymongo.MongoClient(url)
+db = mongo_client["attendance"]
+member_db = db["members"]
+db.members.create_index([('email', pymongo.ASCENDING)], unique=True)
 
-except Exception as e:
-    print(e)
+
+def signup(name,email, phone, register, roll, password):
+    email = email
+    phone = phone
+    reigster = register
+    roll = roll
+    encrypted = crypt.encryptor(password)
+    encrypted_pass = encrypted[0]
+    key = encrypted[1]
+    query = {
+        "email": email,
+        "phone": phone,
+        "register": register,
+        "roll": roll,
+        "password": encrypted_pass,
+        "key": key
+    }
+    try:
+        insert = member_db.insert_one(query)
+        return "Success"
+    except Exception as err:
+        return err
